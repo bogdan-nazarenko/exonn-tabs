@@ -1,5 +1,7 @@
+import TabbedUI from "@ui/TabbedUI";
+
 const App = () => {
-    return <></>;
+    return <TabbedUI />;
 };
 
 export default App;
