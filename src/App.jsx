@@ -1,7 +1,5 @@
-import Section from "@ui/Section";
-
 const App = () => {
-    return <Section />;
+    return <></>;
 };
 
 export default App;
