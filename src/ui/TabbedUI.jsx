@@ -1,21 +1,46 @@
+import tabs from "@data/tabs";
 import "./TabbedUI.scss";
 
 const TabbedUI = () => {
     return (
         <div className="tabbed-ui">
             <div className="tabbed-ui__tab-bar" role="tablist">
-                <div className="tabbed-ui__group">
-                    <button role="tab" tabIndex={-1}></button>
-                    <button aria-label="Close tab"></button>
-                </div>
+                {tabs.map((tab) => {
+                    const { tabId, title, panelId } = tab;
+
+                    return (
+                        <div className="tabbed-ui__group" key={tabId}>
+                            <button
+                                className="tabbed-ui__tab"
+                                id={tabId}
+                                role="tab"
+                                aria-controls={panelId}
+                                aria-selected="false"
+                                tabIndex={-1}
+                            >
+                                {title}
+                            </button>
+                            <button aria-label="Close tab"></button>
+                        </div>
+                    );
+                })}
             </div>
 
             <div className="tabbed-ui__content">
-                <div
-                    className="tabbed-ui__panel"
-                    role="tabpanel"
-                    tabIndex={0}
-                ></div>
+                {tabs.map((tab) => {
+                    const { tabId, panelId } = tab;
+
+                    return (
+                        <div
+                            className="tabbed-ui__panel"
+                            id={panelId}
+                            role="tabpanel"
+                            aria-labelledby={tabId}
+                            tabIndex={0}
+                            key={panelId}
+                        ></div>
+                    );
+                })}
             </div>
         </div>
     );
