@@ -1,0 +1,13 @@
+@mixin hover-active {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+
+    @media (pointer: coarse) {
+        &:active {
+            @content;
+        }
+    }
+}

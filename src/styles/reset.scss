@@ -1,0 +1,176 @@
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+html {
+    line-height: 1.5;
+    font-family: sans-serif;
+    overflow-wrap: break-word;
+}
+
+body {
+    min-height: 100dvh;
+}
+
+body,
+blockquote,
+dd,
+dl,
+fieldset,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+input,
+::file-selector-button,
+menu,
+ol,
+ul,
+p,
+pre {
+    margin: 0;
+}
+
+button,
+dialog,
+fieldset,
+input,
+::file-selector-button,
+legend,
+menu,
+ol,
+ul,
+select,
+td,
+th,
+textarea {
+    padding: 0;
+}
+
+::-webkit-search-cancel-button {
+    display: none;
+}
+
+a {
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a,
+ins {
+    text-decoration: none;
+}
+
+address {
+    font-style: normal;
+}
+
+button,
+dialog,
+input:where([type="button"], [type="color"], [type="reset"], [type="submit"]),
+::file-selector-button,
+select {
+    border: 0;
+    background-color: transparent;
+}
+
+button,
+input,
+::file-selector-button,
+select,
+textarea {
+    color: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    font-family: inherit;
+}
+
+button,
+input:where(
+    [type="button"],
+    [type="checkbox"],
+    [type="color"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="file"],
+    [type="radio"],
+    [type="range"],
+    [type="reset"],
+    [type="submit"],
+    [type="time"]
+),
+select,
+summary {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::file-selector-button {
+    cursor: pointer;
+}
+
+:disabled {
+    cursor: not-allowed;
+}
+
+canvas,
+embed,
+iframe,
+object,
+img,
+svg,
+audio,
+video {
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+}
+
+dialog {
+    color: inherit;
+}
+
+fieldset,
+hr,
+iframe {
+    border: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+}
+
+hr {
+    background-color: currentColor;
+    height: 1px;
+}
+
+menu,
+ol,
+ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+textarea {
+    resize: vertical;
+}
+
+u {
+    text-decoration-style: wavy;
+}
