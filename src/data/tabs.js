@@ -1,55 +1,68 @@
 const tabs = [
     {
-        tabId: "dashboard",
+        tabId: "dashboard-tab",
         title: "Dashboard",
+        panelId: "dashboard-panel",
     },
     {
-        tabId: "banking",
+        tabId: "banking-tab",
         title: "Banking",
+        panelId: "banking-panel",
     },
     {
-        tabId: "telefonie",
+        tabId: "telefonie-tab",
         title: "Telefonie",
+        panelId: "telefonie-panel",
     },
     {
-        tabId: "accounting",
+        tabId: "accounting-tab",
         title: "Accounting",
+        panelId: "accounting-panel",
     },
     {
-        tabId: "verkauf",
+        tabId: "verkauf-tab",
         title: "Verkauf",
+        panelId: "verkauf-panel",
     },
     {
-        tabId: "statistik",
+        tabId: "stats-tab",
         title: "Statistik",
+        panelId: "stats-panel",
     },
     {
-        tabId: "post-office",
+        tabId: "post-office-tab",
         title: "Post Office",
+        panelId: "post-office-panel",
     },
     {
-        tabId: "admin",
+        tabId: "admin-tab",
         title: "Administration",
+        panelId: "admin-panel",
     },
     {
-        tabId: "help",
+        tabId: "help-tab",
         title: "Help",
+        panelId: "help-panel",
     },
     {
-        tabId: "warenbestand",
+        tabId: "warenbestand-tab",
         title: "Warenbestand",
+        panelId: "warenbestand-panel",
     },
     {
-        tabId: "auswahllisten",
+        tabId: "auswahllisten-tab",
         title: "Auswahllisten",
+        panelId: "auswahllisten-panel",
     },
     {
-        tabId: "einkauf",
+        tabId: "einkauf-tab",
         title: "Einkauf",
+        panelId: "einkauf-panel",
     },
     {
-        tabId: "rechn",
+        tabId: "rechn-tab",
         title: "Rechn",
+        panelId: "rechn-panel",
     },
 ];
 
