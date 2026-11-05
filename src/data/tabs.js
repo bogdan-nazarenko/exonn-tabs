@@ -1,54 +1,54 @@
 const tabs = [
     {
-        id: "dashboard",
+        tabId: "dashboard",
         title: "Dashboard",
     },
     {
-        id: "banking",
+        tabId: "banking",
         title: "Banking",
     },
     {
-        id: "telefonie",
+        tabId: "telefonie",
         title: "Telefonie",
     },
     {
-        id: "accounting",
+        tabId: "accounting",
         title: "Accounting",
     },
     {
-        id: "verkauf",
+        tabId: "verkauf",
         title: "Verkauf",
     },
     {
-        id: "statistik",
+        tabId: "statistik",
         title: "Statistik",
     },
     {
-        id: "post-office",
+        tabId: "post-office",
         title: "Post Office",
     },
     {
-        id: "admin",
+        tabId: "admin",
         title: "Administration",
     },
     {
-        id: "help",
+        tabId: "help",
         title: "Help",
     },
     {
-        id: "warenbestand",
+        tabId: "warenbestand",
         title: "Warenbestand",
     },
     {
-        id: "auswahllisten",
+        tabId: "auswahllisten",
         title: "Auswahllisten",
     },
     {
-        id: "einkauf",
+        tabId: "einkauf",
         title: "Einkauf",
     },
     {
-        id: "rechn",
+        tabId: "rechn",
         title: "Rechn",
     },
 ];
