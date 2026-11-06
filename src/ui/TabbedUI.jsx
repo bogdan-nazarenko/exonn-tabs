@@ -1,6 +1,29 @@
 import { useState } from "react";
+import { useSortable } from "@dnd-kit/react/sortable";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
+
+const Group = ({ tabId, panelId, index, activeTab, title, onClick }) => {
+    const { ref } = useSortable({ id: tabId, index });
+
+    return (
+        <div className="tabbed-ui__group" key={tabId}>
+            <button
+                className="tabbed-ui__tab"
+                id={tabId}
+                role="tab"
+                aria-controls={panelId}
+                aria-selected={activeTab === tabId ? "true" : "false"}
+                tabIndex={activeTab === tabId ? 0 : -1}
+                ref={ref}
+                onClick={onClick}
+            >
+                {title}
+            </button>
+            <button aria-label="Close tab"></button>
+        </div>
+    );
+};
 
 const TabbedUI = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].tabId);
@@ -50,26 +73,19 @@ const TabbedUI = () => {
                 role="tablist"
                 onKeyDown={moveFocus}
             >
-                {tabs.map((tab) => {
+                {tabs.map((tab, index) => {
                     const { tabId, title, panelId } = tab;
 
                     return (
-                        <div className="tabbed-ui__group" key={tabId}>
-                            <button
-                                className="tabbed-ui__tab"
-                                id={tabId}
-                                role="tab"
-                                aria-controls={panelId}
-                                aria-selected={
-                                    activeTab === tabId ? "true" : "false"
-                                }
-                                tabIndex={activeTab === tabId ? 0 : -1}
-                                onClick={() => selectTab(tabId)}
-                            >
-                                {title}
-                            </button>
-                            <button aria-label="Close tab"></button>
-                        </div>
+                        <Group
+                            tabId={tabId}
+                            panelId={panelId}
+                            index={index}
+                            activeTab={activeTab}
+                            title={title}
+                            key={tabId}
+                            onClick={() => selectTab(tabId)}
+                        />
                     );
                 })}
             </div>
