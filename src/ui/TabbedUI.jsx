@@ -7,7 +7,7 @@ const TabbedUI = () => {
 
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
-    function tabHandler(tab) {
+    function selectTab(tab) {
         if (activeTab === tab) return;
 
         setActiveTab(tab);
@@ -64,7 +64,7 @@ const TabbedUI = () => {
                                     activeTab === tabId ? "true" : "false"
                                 }
                                 tabIndex={activeTab === tabId ? 0 : -1}
-                                onClick={() => tabHandler(tabId)}
+                                onClick={() => selectTab(tabId)}
                             >
                                 {title}
                             </button>
