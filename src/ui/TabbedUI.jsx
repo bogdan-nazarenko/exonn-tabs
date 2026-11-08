@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Reorder } from "motion/react";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
 
 const TabbedUI = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].tabId);
-
+    const [tabOrder, setTabOrder] = useState(tabs);
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
     function selectTab(tabId) {
@@ -45,16 +46,26 @@ const TabbedUI = () => {
 
     return (
         <div className="tabbed-ui">
-            <div
+            <Reorder.Group
                 className="tabbed-ui__tab-bar"
                 role="tablist"
+                as="div"
+                axis="xy"
+                values={tabOrder}
+                onReorder={setTabOrder}
                 onKeyDown={moveFocus}
             >
-                {tabs.map((tab) => {
+                {tabOrder.map((tab) => {
                     const { tabId, title, panelId } = tab;
 
                     return (
-                        <div className="tabbed-ui__group" key={tabId}>
+                        <Reorder.Item
+                            className="tabbed-ui__item"
+                            as="div"
+                            value={tab}
+                            key={tabId}
+                            tabIndex={undefined}
+                        >
                             <button
                                 className="tabbed-ui__tab"
                                 id={tabId}
@@ -69,10 +80,10 @@ const TabbedUI = () => {
                                 {title}
                             </button>
                             <button aria-label="Close tab"></button>
-                        </div>
+                        </Reorder.Item>
                     );
                 })}
-            </div>
+            </Reorder.Group>
 
             <div className="tabbed-ui__content">
                 {tabData && (
