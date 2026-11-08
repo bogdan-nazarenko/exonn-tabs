@@ -11,3 +11,17 @@
         }
     }
 }
+
+@mixin background(
+    $url,
+    $position: center,
+    $size: contain,
+    $repeat: no-repeat,
+    $color: null
+) {
+    background-image: url($url);
+    background-position: $position;
+    background-size: $size;
+    background-repeat: $repeat;
+    background-color: $color;
+}
