@@ -7,10 +7,10 @@ const TabbedUI = () => {
 
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
-    function selectTab(tab) {
-        if (activeTab === tab) return;
+    function selectTab(tabId) {
+        if (activeTab === tabId) return;
 
-        setActiveTab(tab);
+        setActiveTab(tabId);
     }
 
     function moveFocus(event) {
