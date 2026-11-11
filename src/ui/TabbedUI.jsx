@@ -77,9 +77,12 @@ const TabbedUI = () => {
                                 tabIndex={activeTab === tabId ? 0 : -1}
                                 onClick={() => selectTab(tabId)}
                             >
-                                {title}
+                                <span
+                                    className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
+                                    aria-hidden="true"
+                                ></span>
+                                <span>{title}</span>
                             </button>
-                            <button aria-label="Close tab"></button>
                         </Reorder.Item>
                     );
                 })}
