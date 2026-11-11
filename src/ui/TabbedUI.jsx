@@ -1,7 +1,59 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Reorder } from "motion/react";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
+
+const TabList = ({
+    className = "tabbed-ui__tab-bar",
+    id,
+    labelId,
+    values,
+    ref,
+    onReorder,
+    onKeyDown,
+    children,
+}) => {
+    return (
+        <Reorder.Group
+            className={className}
+            id={id}
+            role="tablist"
+            aria-labelledby={labelId}
+            as="div"
+            axis="xy"
+            values={values}
+            ref={ref}
+            onReorder={onReorder}
+            onKeyDown={onKeyDown}
+        >
+            {children}
+        </Reorder.Group>
+    );
+};
+
+const Item = ({ value, tabId, panelId, activeTab, onClick, title }) => {
+    return (
+        <Reorder.Item
+            className="tabbed-ui__item"
+            as="div"
+            value={value}
+            tabIndex={undefined}
+        >
+            <button
+                className="tabbed-ui__tab"
+                id={tabId}
+                role="tab"
+                aria-controls={panelId}
+                aria-selected={activeTab === tabId ? "true" : "false"}
+                tabIndex={activeTab === tabId ? 0 : -1}
+                onClick={onClick}
+            >
+                {title}
+            </button>
+            <button aria-label="Close tab"></button>
+        </Reorder.Item>
+    );
+};
 
 const TabbedUI = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].tabId);
@@ -44,49 +96,32 @@ const TabbedUI = () => {
         newTab.focus();
     }
 
+    const tabBarRef = useRef(null);
+
     return (
         <div className="tabbed-ui">
-            <Reorder.Group
-                className="tabbed-ui__tab-bar"
-                role="tablist"
-                as="div"
-                axis="xy"
+            <TabList
                 values={tabOrder}
                 onReorder={setTabOrder}
                 onKeyDown={moveFocus}
+                ref={tabBarRef}
             >
                 {tabOrder.map((tab) => {
-                    const { tabId, title, panelId } = tab;
+                    const { tabId, panelId, title } = tab;
 
                     return (
-                        <Reorder.Item
-                            className="tabbed-ui__item"
-                            as="div"
+                        <Item
                             value={tab}
+                            tabId={tabId}
+                            panelId={panelId}
+                            activeTab={activeTab}
+                            onClick={() => selectTab(tabId)}
+                            title={title}
                             key={tabId}
-                            tabIndex={undefined}
-                        >
-                            <button
-                                className="tabbed-ui__tab"
-                                id={tabId}
-                                role="tab"
-                                aria-controls={panelId}
-                                aria-selected={
-                                    activeTab === tabId ? "true" : "false"
-                                }
-                                tabIndex={activeTab === tabId ? 0 : -1}
-                                onClick={() => selectTab(tabId)}
-                            >
-                                <span
-                                    className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
-                                    aria-hidden="true"
-                                ></span>
-                                <span>{title}</span>
-                            </button>
-                        </Reorder.Item>
+                        />
                     );
                 })}
-            </Reorder.Group>
+            </TabList>
 
             <div className="tabbed-ui__content">
                 {tabData && (
