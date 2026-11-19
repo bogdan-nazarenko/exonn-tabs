@@ -9,7 +9,7 @@ const TabbedUI = () => {
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState(
-        tabs.find((tab) => tab.idHash === hash)?.tabId || tabs[0].tabId
+        tabs.find((tab) => tab.idHash === hash)?.tabId || ""
     );
     const [targetTabs, setTargetTabs] = useState({ visible: tabs, hidden: [] });
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
