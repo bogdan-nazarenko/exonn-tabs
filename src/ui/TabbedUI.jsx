@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Reorder } from "motion/react";
+import { saveUserData, getUserData } from "@utils/user-actions";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
 
@@ -11,7 +12,9 @@ const TabbedUI = () => {
     const [activeTab, setActiveTab] = useState(
         tabs.find((tab) => tab.idHash === hash)?.tabId || ""
     );
-    const [targetTabs, setTargetTabs] = useState({ visible: tabs, hidden: [] });
+    const [targetTabs, setTargetTabs] = useState(
+        () => getUserData("tabs") || { visible: tabs, hidden: [] }
+    );
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
     function selectTab(tabId) {
@@ -203,10 +206,16 @@ const TabbedUI = () => {
                     as="div"
                     values={targetTabs.visible}
                     onReorder={(newOrder) =>
-                        setTargetTabs((prev) => ({
-                            visible: newOrder,
-                            hidden: [...prev.hidden],
-                        }))
+                        setTargetTabs((prev) => {
+                            const newTargetTabs = {
+                                visible: newOrder,
+                                hidden: [...prev.hidden],
+                            };
+
+                            saveUserData("tabs", newTargetTabs);
+
+                            return newTargetTabs;
+                        })
                     }
                     onKeyDown={moveFocus}
                     ref={tabBarRef}
