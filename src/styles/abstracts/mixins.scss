@@ -25,3 +25,17 @@
     background-repeat: $repeat;
     background-color: $color;
 }
+
+@mixin mask(
+    $url,
+    $position: center,
+    $size: contain,
+    $repeat: no-repeat,
+    $color: currentColor
+) {
+    mask-image: url($url);
+    mask-position: $position;
+    mask-size: $size;
+    mask-repeat: $repeat;
+    background-color: $color;
+}
