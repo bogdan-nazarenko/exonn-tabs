@@ -12,7 +12,8 @@
         "format": "prettier . --write",
         "lint": "oxlint",
         "build": "vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "deploy": "vite build && gh-pages -d dist"
     },
     "dependencies": {
         "motion": "^14.10.1",
