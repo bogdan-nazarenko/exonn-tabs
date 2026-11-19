@@ -152,9 +152,42 @@ const TabbedUI = () => {
         return () => document.removeEventListener("click", closeMenu);
     }, []);
 
+    const [isPressed, setPressed] = useState(false);
+    const [pinnedTabs, setPinnedTabs] = useState([]);
+
+    function togglePinning(tabId, tab) {
+        const pinnedTab = pinnedTabs.find((tab) => tab.tabId === tabId);
+
+        if (pinnedTab) {
+            setPinnedTabs((prev) => {
+                return prev.filter((tab) => tab.tabId !== tabId);
+            });
+
+            return;
+        }
+
+        setPinnedTabs((prev) => [tab, ...prev]);
+    }
+
     return (
         <div className="tabbed-ui">
             <div className="tabbed-ui__controls">
+                <button
+                    className="tabbed-ui__pin-button"
+                    title={
+                        isPressed
+                            ? "Tab pinning mode"
+                            : "Select tabs to pin or unpin"
+                    }
+                    aria-label={
+                        isPressed
+                            ? "Tab pinning mode"
+                            : "Select tabs to pin or unpin"
+                    }
+                    aria-pressed={isPressed ? "true" : "false"}
+                    onClick={() => setPressed((prev) => !prev)}
+                ></button>
+
                 <Reorder.Group
                     className="tabbed-ui__tab-bar"
                     role="tablist"
@@ -172,26 +205,43 @@ const TabbedUI = () => {
                 >
                     {targetTabs.visible.map((tab) => {
                         const { tabId, panelId, title } = tab;
+                        const pinnedTab = pinnedTabs.find(
+                            (tab) => tab.tabId === tabId
+                        );
 
                         return (
                             <Reorder.Item
-                                className="tabbed-ui__tab"
+                                className={`tabbed-ui__tab ${pinnedTab ? "tabbed-ui__tab_pinned" : ""}`.trim()}
                                 as="button"
+                                drag={pinnedTab ? false : true}
                                 value={tab}
                                 id={tabId}
                                 role="tab"
+                                aria-label={
+                                    pinnedTab
+                                        ? `Pinned tab: ${title}`
+                                        : undefined
+                                }
                                 aria-controls={panelId}
                                 aria-selected={
                                     activeTab === tabId ? "true" : "false"
                                 }
                                 tabIndex={activeTab === tabId ? 0 : -1}
-                                onClick={() => selectTab(tabId)}
+                                onClick={
+                                    isPressed
+                                        ? () => togglePinning(tabId, tab)
+                                        : () => selectTab(tabId)
+                                }
                                 key={tabId}
                             >
                                 <span
                                     className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
                                 ></span>
-                                <span>{title}</span>
+                                <span
+                                    aria-hidden={pinnedTab ? "true" : "false"}
+                                >
+                                    {title}
+                                </span>
                             </Reorder.Item>
                         );
                     })}
