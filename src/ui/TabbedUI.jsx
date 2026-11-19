@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { Reorder } from "motion/react";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
 
 const TabbedUI = () => {
-    const [activeTab, setActiveTab] = useState(tabs[0].tabId);
+    const { pathname, hash } = useLocation();
+    const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState(
+        tabs.find((tab) => tab.idHash === hash)?.tabId || tabs[0].tabId
+    );
     const [targetTabs, setTargetTabs] = useState({ visible: tabs, hidden: [] });
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
@@ -204,7 +210,7 @@ const TabbedUI = () => {
                     ref={tabBarRef}
                 >
                     {targetTabs.visible.map((tab) => {
-                        const { tabId, panelId, title } = tab;
+                        const { tabId, panelId, title, idHash } = tab;
                         const pinnedTab = pinnedTabs.find(
                             (tab) => tab.tabId === tabId
                         );
@@ -230,7 +236,10 @@ const TabbedUI = () => {
                                 onClick={
                                     isPressed
                                         ? () => togglePinning(tabId, tab)
-                                        : () => selectTab(tabId)
+                                        : () => {
+                                              selectTab(tabId);
+                                              navigate({ hash: idHash });
+                                          }
                                 }
                                 key={tabId}
                             >
@@ -273,7 +282,7 @@ const TabbedUI = () => {
                     ref={hiddenMenuRef}
                 >
                     {targetTabs.hidden.map((tab, index) => {
-                        const { tabId, panelId, title } = tab;
+                        const { tabId, panelId, title, idHash } = tab;
 
                         return (
                             <button
@@ -285,7 +294,10 @@ const TabbedUI = () => {
                                     activeTab === tabId ? "true" : "false"
                                 }
                                 tabIndex={activeTab === tabId ? 0 : -1}
-                                onClick={() => selectTab(tabId)}
+                                onClick={() => {
+                                    selectTab(tabId);
+                                    navigate({ hash: idHash });
+                                }}
                                 ref={index === 0 ? firstHiddenRef : undefined}
                                 key={tabId}
                             >
@@ -307,7 +319,9 @@ const TabbedUI = () => {
                         role="tabpanel"
                         aria-labelledby={tabData.tabId}
                         tabIndex={0}
-                    ></div>
+                    >
+                        {hash && `Current path: ${pathname}${hash}`}
+                    </div>
                 )}
             </div>
         </div>
