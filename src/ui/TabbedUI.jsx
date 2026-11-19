@@ -162,20 +162,26 @@ const TabbedUI = () => {
     }, []);
 
     const [isPressed, setPressed] = useState(false);
-    const [pinnedTabs, setPinnedTabs] = useState([]);
+    const [pinnedTabs, setPinnedTabs] = useState(
+        () => getUserData("pinned") || []
+    );
 
     function togglePinning(tabId, tab) {
         const pinnedTab = pinnedTabs.find((tab) => tab.tabId === tabId);
 
-        if (pinnedTab) {
-            setPinnedTabs((prev) => {
-                return prev.filter((tab) => tab.tabId !== tabId);
-            });
+        setPinnedTabs((prev) => {
+            let newPinnedTabs = null;
 
-            return;
-        }
+            if (pinnedTab) {
+                newPinnedTabs = prev.filter((tab) => tab.tabId !== tabId);
+            } else {
+                newPinnedTabs = [tab, ...prev];
+            }
 
-        setPinnedTabs((prev) => [tab, ...prev]);
+            saveUserData("pinned", newPinnedTabs);
+
+            return newPinnedTabs;
+        });
     }
 
     const pinButtonRef = useRef(null);
