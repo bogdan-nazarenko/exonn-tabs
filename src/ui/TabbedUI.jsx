@@ -127,7 +127,7 @@ const TabbedUI = () => {
         function handleResize() {
             if (timeoutId) clearTimeout(timeoutId);
 
-            setTimeout(updateOverflow, 100);
+            setTimeout(updateOverflow, 150);
         }
 
         handleResize();
