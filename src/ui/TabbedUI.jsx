@@ -228,10 +228,15 @@ const TabbedUI = () => {
                                 role="tab"
                                 aria-label={
                                     pinnedTab
-                                        ? `Pinned tab: ${title}. To return, press Escape`
+                                        ? `Pinned tab: ${title}`
                                         : (isPressed &&
-                                              `Pin this tab or press Escape: ${title}`) ||
+                                              `Pin this tab: ${title}`) ||
                                           undefined
+                                }
+                                aria-description={
+                                    pinnedTab || isPressed
+                                        ? "To return, press Escape"
+                                        : undefined
                                 }
                                 aria-controls={panelId}
                                 aria-selected={
