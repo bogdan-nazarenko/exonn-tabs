@@ -175,6 +175,8 @@ const TabbedUI = () => {
         setPinnedTabs((prev) => [tab, ...prev]);
     }
 
+    const pinButtonRef = useRef(null);
+
     return (
         <div className="tabbed-ui">
             <div className="tabbed-ui__controls">
@@ -191,6 +193,7 @@ const TabbedUI = () => {
                             : "Select tabs to pin or unpin"
                     }
                     aria-pressed={isPressed ? "true" : "false"}
+                    ref={pinButtonRef}
                     onClick={() => setPressed((prev) => !prev)}
                 ></button>
 
@@ -225,9 +228,9 @@ const TabbedUI = () => {
                                 role="tab"
                                 aria-label={
                                     pinnedTab
-                                        ? `Pinned tab: ${title}`
+                                        ? `Pinned tab: ${title}. To return, press Escape`
                                         : (isPressed &&
-                                              `Pin this tab: ${title}`) ||
+                                              `Pin this tab or press Escape: ${title}`) ||
                                           undefined
                                 }
                                 aria-controls={panelId}
@@ -243,6 +246,11 @@ const TabbedUI = () => {
                                               navigate({ hash: idHash });
                                           }
                                 }
+                                onKeyDown={(event) => {
+                                    if (event.key === "Escape") {
+                                        pinButtonRef.current.focus();
+                                    }
+                                }}
                                 key={tabId}
                             >
                                 <span
