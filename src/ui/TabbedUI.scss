@@ -1,1 +1,195 @@
 @use "@styles/abstracts" as *;
+
+.tabbed-ui {
+    margin-left: auto;
+    padding: 2rem;
+    max-width: 186rem;
+}
+
+.tabbed-ui__controls {
+    display: flex;
+    position: relative;
+}
+
+.tabbed-ui__pin-button {
+    transition: var(--duration);
+    outline-offset: -0.2rem;
+
+    &::before {
+        display: block;
+        width: 5.7rem;
+        height: 100%;
+        content: "";
+        @include mask($url: "@media/icons/fi-rs-box-alt.svg", $size: 1.6rem);
+    }
+}
+
+.tabbed-ui__pin-button[aria-pressed="true"] {
+    background-color: var(--highlight-color);
+    color: var(--almost-white-color);
+}
+
+.tabbed-ui__tab-bar {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.tabbed-ui__tab {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    outline-offset: -0.2rem;
+    border-top: 0.2rem solid transparent;
+    border-radius: 0.1rem 0.1rem 0 0;
+    background-color: var(--almost-white-color);
+    padding: 1.6rem 2rem;
+    white-space: nowrap;
+
+    @media (width < $desktop) {
+        padding: 1.2rem 1.6rem;
+    }
+
+    .tabbed-ui__menu & {
+        width: 100%;
+
+        &:not(:last-child) {
+            border-bottom: 0.2rem solid var(--light-gray-color);
+        }
+    }
+}
+
+.tabbed-ui__tab[aria-selected="true"] {
+    border-color: var(--highlight-color);
+    background-color: var(--light-gray-color);
+}
+
+.tabbed-ui__tab_pinned {
+    position: relative;
+
+    &::after {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.2rem;
+        width: 1.6rem;
+        height: 1.6rem;
+        content: "";
+        @include mask("@media/icons/fi-rs-thumbtack.svg");
+    }
+}
+
+.tabbed-ui__icon {
+    mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    background-color: currentColor;
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.tabbed-ui__icon_dashboard {
+    mask-image: url(@media/icons/fi-rs-apps.svg);
+}
+
+.tabbed-ui__icon_banking {
+    mask-image: url(@media/icons/fi-rs-bank.svg);
+}
+
+.tabbed-ui__icon_telefonie {
+    mask-image: url(@media/icons/fi-rs-phone-call.svg);
+}
+
+.tabbed-ui__icon_accounting {
+    mask-image: url(@media/icons/fi-rs-user-add.svg);
+}
+
+.tabbed-ui__icon_verkauf {
+    mask-image: url(@media/icons/fi-rs-shop.svg);
+}
+
+.tabbed-ui__icon_statistik {
+    mask-image: url(@media/icons/fi-rs-chart-pie.svg);
+}
+
+.tabbed-ui__icon_post-office {
+    mask-image: url(@media/icons/fi-rs-mail.svg);
+}
+
+.tabbed-ui__icon_administration {
+    mask-image: url(@media/icons/fi-rs-settings.svg);
+}
+
+.tabbed-ui__icon_help {
+    mask-image: url(@media/icons/fi-rs-shop.svg);
+}
+
+.tabbed-ui__icon_warenbestand {
+    mask-image: url(@media/icons/fi-rs-cube.svg);
+}
+
+.tabbed-ui__icon_auswahllisten {
+    mask-image: url(@media/icons/fi-rs-list.svg);
+}
+
+.tabbed-ui__icon_einkauf {
+    mask-image: url(@media/icons/fi-rs-shopping-cart-check.svg);
+}
+
+.tabbed-ui__icon_rechn {
+    mask-image: url(@media/icons/fi-rs-browser.svg);
+}
+
+.tabbed-ui__menu-button {
+    background-color: var(--highlight-color);
+    overflow: hidden;
+    color: var(--almost-white-color);
+
+    &::before {
+        display: block;
+        transition: var(--duration);
+        width: 3.6rem;
+        height: 100%;
+        content: "";
+        @include mask($url: "@media/icons/arrow.svg", $size: 0.9rem);
+    }
+}
+
+.tabbed-ui__menu-button[aria-expanded="true"]::before {
+    transform: rotate(-180deg);
+}
+
+.tabbed-ui__menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    transform: scale(0.8);
+    visibility: hidden;
+    opacity: 0;
+    transition: var(--duration);
+    box-shadow: 0 3rem 3rem 0 #7b7f9112;
+    border: 0.1rem solid var(--light-gray-color);
+    background-color: var(--almost-white-color);
+    padding-inline: 1rem;
+    max-height: 28.5rem;
+    overflow: hidden auto;
+
+    @media (width < $desktop) {
+        max-height: 27.6rem;
+    }
+}
+
+.tabbed-ui__menu_visible {
+    transform: scale(1);
+    visibility: visible;
+    opacity: 1;
+}
+
+.tabbed-ui__content {
+    background-color: var(--light-gray-color);
+    padding: 2rem;
+}
+
+.tabbed-ui__panel {
+    background-color: var(--almost-white-color);
+    min-height: 70rem;
+}
