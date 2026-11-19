@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Reorder } from "motion/react";
 import tabs from "@data/tabs";
 import "./TabbedUI.scss";
 
 const TabbedUI = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].tabId);
-    const [tabOrder, setTabOrder] = useState(tabs);
+    const [targetTabs, setTargetTabs] = useState({ visible: tabs, hidden: [] });
     const tabData = tabs.find((tab) => tab.tabId === activeTab);
 
     function selectTab(tabId) {
@@ -14,27 +14,23 @@ const TabbedUI = () => {
         setActiveTab(tabId);
     }
 
-    function moveFocus(event) {
+    function moveFocus(event, isVerticalMenu = false) {
         const tabBar = event.currentTarget;
         const tab = event.target;
         let newTab = null;
 
         switch (event.key) {
-            case "ArrowLeft":
-                newTab =
-                    tab.parentElement.previousElementSibling?.children[0] ||
-                    tabBar.lastElementChild.children[0];
+            case isVerticalMenu ? "ArrowUp" : "ArrowLeft":
+                newTab = tab.previousElementSibling || tabBar.lastElementChild;
                 break;
-            case "ArrowRight":
-                newTab =
-                    tab.parentElement.nextElementSibling?.children[0] ||
-                    tabBar.firstElementChild.children[0];
+            case isVerticalMenu ? "ArrowDown" : "ArrowRight":
+                newTab = tab.nextElementSibling || tabBar.firstElementChild;
                 break;
             case "Home":
-                newTab = tabBar.firstElementChild.children[0];
+                newTab = tabBar.firstElementChild;
                 break;
             case "End":
-                newTab = tabBar.lastElementChild.children[0];
+                newTab = tabBar.lastElementChild;
                 break;
             default:
                 return;
@@ -44,28 +40,192 @@ const TabbedUI = () => {
         newTab.focus();
     }
 
+    const tabBarRef = useRef(null);
+    const hiddenMenuRef = useRef(null);
+
+    useEffect(() => {
+        function updateOverflow() {
+            const { clientWidth } = tabBarRef.current;
+            const visibleTabs = tabBarRef.current.children;
+            let accumulatedWidth = 0;
+
+            for (let i = 0; i < visibleTabs.length; i++) {
+                accumulatedWidth += visibleTabs[i].clientWidth;
+            }
+
+            const difference = clientWidth - accumulatedWidth;
+
+            if (difference < 0) {
+                setTargetTabs((prev) => {
+                    const tabBarRect =
+                        tabBarRef.current.getBoundingClientRect();
+
+                    const outOfBoundTabs = [];
+
+                    for (let i = 0; i < visibleTabs.length; i++) {
+                        const { id } = visibleTabs[i];
+
+                        const tabRect = visibleTabs[i].getBoundingClientRect();
+
+                        if (tabRect.right <= tabBarRect.right) continue;
+
+                        const foundedTab = prev.visible.find(
+                            (tab) => tab.tabId === id
+                        );
+
+                        if (!foundedTab) continue;
+
+                        outOfBoundTabs.push(foundedTab);
+                    }
+
+                    return {
+                        visible: prev.visible.filter((tab) => {
+                            return !outOfBoundTabs.some(
+                                (o) => o.tabId === tab.tabId
+                            );
+                        }),
+                        hidden: [...outOfBoundTabs, ...prev.hidden],
+                    };
+                });
+            } else if (difference > 0) {
+                setTargetTabs((prev) => {
+                    const hiddenTabs = hiddenMenuRef.current.children;
+                    const restoredTabs = [];
+
+                    for (let i = 0; i < hiddenTabs.length; i++) {
+                        const { clientWidth, id } = hiddenTabs[i];
+
+                        if (clientWidth > difference) break;
+
+                        const foundedTab = prev.hidden.find(
+                            (tab) => tab.tabId === id
+                        );
+
+                        restoredTabs.push(foundedTab);
+                    }
+
+                    return {
+                        visible: [...prev.visible, ...restoredTabs],
+                        hidden: prev.hidden.filter((tab) => {
+                            return !restoredTabs.some(
+                                (r) => r.tabId === tab.tabId
+                            );
+                        }),
+                    };
+                });
+            }
+        }
+
+        let timeoutId = null;
+
+        function handleResize() {
+            if (timeoutId) clearTimeout(timeoutId);
+
+            setTimeout(updateOverflow, 100);
+        }
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    const [isMenuVisible, setMenuVisible] = useState(false);
+    const menuButtonRef = useRef(null);
+    const firstHiddenRef = useRef(null);
+
+    useEffect(() => {
+        function closeMenu(event) {
+            if (
+                !event.target.closest(".tabbed-ui__menu-button") &&
+                !event.target.closest(".tabbed-ui__menu")
+            ) {
+                setMenuVisible(false);
+            }
+        }
+
+        document.addEventListener("click", closeMenu);
+
+        return () => document.removeEventListener("click", closeMenu);
+    }, []);
+
     return (
         <div className="tabbed-ui">
-            <Reorder.Group
-                className="tabbed-ui__tab-bar"
-                role="tablist"
-                as="div"
-                axis="xy"
-                values={tabOrder}
-                onReorder={setTabOrder}
-                onKeyDown={moveFocus}
-            >
-                {tabOrder.map((tab) => {
-                    const { tabId, title, panelId } = tab;
+            <div className="tabbed-ui__controls">
+                <Reorder.Group
+                    className="tabbed-ui__tab-bar"
+                    role="tablist"
+                    as="div"
+                    axis="xy"
+                    values={targetTabs.visible}
+                    onReorder={(newOrder) =>
+                        setTargetTabs((prev) => ({
+                            visible: newOrder,
+                            hidden: [...prev.hidden],
+                        }))
+                    }
+                    onKeyDown={moveFocus}
+                    ref={tabBarRef}
+                >
+                    {targetTabs.visible.map((tab) => {
+                        const { tabId, panelId, title } = tab;
 
-                    return (
-                        <Reorder.Item
-                            className="tabbed-ui__item"
-                            as="div"
-                            value={tab}
-                            key={tabId}
-                            tabIndex={undefined}
-                        >
+                        return (
+                            <Reorder.Item
+                                className="tabbed-ui__tab"
+                                as="button"
+                                value={tab}
+                                id={tabId}
+                                role="tab"
+                                aria-controls={panelId}
+                                aria-selected={
+                                    activeTab === tabId ? "true" : "false"
+                                }
+                                tabIndex={activeTab === tabId ? 0 : -1}
+                                onClick={() => selectTab(tabId)}
+                                key={tabId}
+                            >
+                                <span
+                                    className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
+                                ></span>
+                                <span>{title}</span>
+                            </Reorder.Item>
+                        );
+                    })}
+                </Reorder.Group>
+
+                <button
+                    className="tabbed-ui__menu-button"
+                    id="menu-button"
+                    title="Show more tabs"
+                    aria-label="Show more tabs"
+                    aria-controls="hidden-menu"
+                    aria-expanded={isMenuVisible ? "true" : "false"}
+                    ref={menuButtonRef}
+                    onClick={() => setMenuVisible((prev) => !prev)}
+                    onKeyDown={(event) => {
+                        if (event.key !== "ArrowDown") return;
+
+                        event.preventDefault();
+                        firstHiddenRef.current?.focus();
+                    }}
+                ></button>
+
+                <div
+                    className={`tabbed-ui__menu ${isMenuVisible ? "tabbed-ui__menu_visible" : ""}`.trim()}
+                    id="hidden-menu"
+                    role="tablist"
+                    aria-labelledby="menu-button"
+                    onKeyDown={(event) => moveFocus(event, true)}
+                    ref={hiddenMenuRef}
+                >
+                    {targetTabs.hidden.map((tab, index) => {
+                        const { tabId, panelId, title } = tab;
+
+                        return (
                             <button
                                 className="tabbed-ui__tab"
                                 id={tabId}
@@ -76,17 +236,18 @@ const TabbedUI = () => {
                                 }
                                 tabIndex={activeTab === tabId ? 0 : -1}
                                 onClick={() => selectTab(tabId)}
+                                ref={index === 0 ? firstHiddenRef : undefined}
+                                key={tabId}
                             >
                                 <span
                                     className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
-                                    aria-hidden="true"
                                 ></span>
                                 <span>{title}</span>
                             </button>
-                        </Reorder.Item>
-                    );
-                })}
-            </Reorder.Group>
+                        );
+                    })}
+                </div>
+            </div>
 
             <div className="tabbed-ui__content">
                 {tabData && (
