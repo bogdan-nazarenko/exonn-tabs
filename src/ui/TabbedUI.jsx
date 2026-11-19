@@ -226,7 +226,9 @@ const TabbedUI = () => {
                                 aria-label={
                                     pinnedTab
                                         ? `Pinned tab: ${title}`
-                                        : undefined
+                                        : (isPressed &&
+                                              `Pin this tab: ${title}`) ||
+                                          undefined
                                 }
                                 aria-controls={panelId}
                                 aria-selected={
@@ -247,7 +249,11 @@ const TabbedUI = () => {
                                     className={`tabbed-ui__icon tabbed-ui__icon_${title.replace(" ", "-").toLowerCase()}`}
                                 ></span>
                                 <span
-                                    aria-hidden={pinnedTab ? "true" : "false"}
+                                    aria-hidden={
+                                        pinnedTab || isPressed
+                                            ? "true"
+                                            : undefined
+                                    }
                                 >
                                     {title}
                                 </span>
