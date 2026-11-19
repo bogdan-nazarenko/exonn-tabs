@@ -280,6 +280,7 @@ const TabbedUI = () => {
                     id="menu-button"
                     title="Show more tabs"
                     aria-label="Show more tabs"
+                    aria-description="Press arrow down to access hidden tabs"
                     aria-controls="hidden-menu"
                     aria-expanded={isMenuVisible ? "true" : "false"}
                     ref={menuButtonRef}
