@@ -201,7 +201,6 @@ const TabbedUI = () => {
                     className="tabbed-ui__tab-bar"
                     role="tablist"
                     as="div"
-                    axis="xy"
                     values={targetTabs.visible}
                     onReorder={(newOrder) =>
                         setTargetTabs((prev) => ({
@@ -222,7 +221,7 @@ const TabbedUI = () => {
                             <Reorder.Item
                                 className={`tabbed-ui__tab ${pinnedTab ? "tabbed-ui__tab_pinned" : ""}`.trim()}
                                 as="button"
-                                drag={pinnedTab ? false : true}
+                                drag={pinnedTab ? false : "x"}
                                 value={tab}
                                 id={tabId}
                                 role="tab"
